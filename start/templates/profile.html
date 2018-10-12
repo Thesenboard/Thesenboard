@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+    {% block content %}
+
+    <div class="container main">
+
+    {% if user.is_authenticated %}
+     <h3> Profil </h3>
+
+
+   {{ user.username }}
+{{ user.email }}
+{{ user.first_name }}
+{{ user.last_name }}
+    {% else %}
+        <div class="alert alert-danger" role="alert">Diese Seite ist nur für angemeldete Benutzer sichtbar!</div>
+        <p class="pl-2"><a href="{% url 'login' %}">Bitte melden Sie sich an.</a></p>
+    {% endif %}
+
+    </div>
+
+    {% endblock content %}

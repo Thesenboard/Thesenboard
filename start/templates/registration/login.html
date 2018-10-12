@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+    {% block content %}
+
+        <div class="content anmeldung">
+            <form method="post" action="{% url 'login' %}" class="form-signin">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 font-weight-normal">Bitte melden Sie sich an:</h1>
+            <label for="id_username" class="sr-only">Benutzername</label>
+            <input type="text" name="username" id="id_username" maxlength="254" class="form-control" placeholder="Benutzername" required autofocus>
+            <label for="id_password" class="sr-only">Passwort</label>
+            <input type="password" name="password" id="id_password" class="form-control" placeholder="Passwort" required>
+            <div>
+              <input type="submit" class="btn btn-lg btn-primary btn-block" value="Anmelden" />
+              <input type="hidden" name="next" value="{{ next }}" />
+            </div>
+            </form>
+            <p class="text-right pr-4"><a href="{% url 'password_reset' %}">Passwort vergessen?</a></p>
+
+            {% if form.errors %}
+                 <div class="alert alert-danger" role="alert">Der Benutzername und das Passwort sind nicht richtig. Bitte versuchen Sie es erneut.</div>
+            {% endif %}
+
+            {% if next %}
+              {% if user.is_authenticated %}
+                <div class="alert alert-danger" role="alert">Dieser Account hat keine Zugriffsrechte auf diese Seite.</div>
+              {% else %}
+                <div class="alert alert-primary" role="alert">Bitte melden Sie sich an.</div>
+              {% endif %}
+            {% endif %}
+        </div>
+    {% endblock content %}

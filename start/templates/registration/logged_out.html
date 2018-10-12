@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+    {% block content %}
+            <div class="content abmeldung">
+                <div class="alert alert-success" role="alert">Sie haben sich erfolgreich abgemeldet!</div>
+                <a href="{% url 'login'%}">Klicken Sie hier, um sich wieder anzumelden.</a>
+            </div>
+    {% endblock %}
