@@ -7,11 +7,30 @@
     {% if user.is_authenticated %}
      <h3> Profil </h3>
 
-
-   {{ user.username }}
-{{ user.email }}
-{{ user.first_name }}
-{{ user.last_name }}
+    <table class="table">
+      <tbody>
+        <tr>
+          <th scope="row">Benutzername</th>
+          <td id="user">{{ user.username }}</td>
+          <td><button class="btn btn-outline-primary" id="benutzer">Bearbeiten</button></td>
+        </tr>
+        <tr>
+          <th scope="row">Email</th>
+          <td id="mail">{{ user.email }}</td>
+          <td><button class="btn btn-outline-primary" id="email">Bearbeiten</button></td>
+        </tr>
+        <tr>
+          <th scope="row">Vorname</th>
+          <td id="vname">{{ user.first_name }}</td>
+          <td><button class="btn btn-outline-primary" id="vorname">Bearbeiten</button></td>
+        </tr>
+        <tr>
+          <th scope="row">Nachname</th>
+          <td id="nname">{{ user.last_name }}</td>
+          <td><button class="btn btn-outline-primary" id="nachname">Bearbeiten</button></td>
+        </tr>
+      </tbody>
+    </table>
     {% else %}
         <div class="alert alert-danger" role="alert">Diese Seite ist nur für angemeldete Benutzer sichtbar!</div>
         <p class="pl-2"><a href="{% url 'login' %}">Bitte melden Sie sich an.</a></p>
