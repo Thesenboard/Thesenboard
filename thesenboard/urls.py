@@ -19,8 +19,9 @@ from django.urls import path
 from start import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('', views.HomeView.as_view(), name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('profile/', views.profile, name='profile'),
+    path('admin/', admin.site.urls),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('user/', views.UserDetail.as_view()),
 ]
