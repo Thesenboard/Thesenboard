@@ -6,23 +6,28 @@ var ProfilChangeHandler = {
         inputClass: "form-control",
         inputId: "",
         inputValue: "",
-        id: ""
+        id: "",
+        api: "",
     },
     createInput: function() {
+        var element = document.getElementById(this.config.elementId);
         var inputField = document.createElement("input");
         inputField.setAttribute("type", this.config.inputType);
         inputField.setAttribute("class", this.config.inputClass);
         inputField.setAttribute("id", this.config.inputId);
         inputField.setAttribute("value", this.config.inputValue);
-        document.getElementById(this.config.elementId).innerText = "";
-        document.getElementById(this.config.elementId).appendChild(inputField);
+        element.classList.remove("cust-value");
+        element.innerText = "";
+        element.appendChild(inputField);
         document.getElementById(this.config.inputId).focus();
     },
     hideInput: function() {
+        var element = document.getElementById(this.config.elementId);
         var textNode = document.getElementById(this.config.elementId).childNodes[0];
         var newValue =  textNode.value;
-        document.getElementById(this.config.elementId).removeChild(textNode);
-        document.getElementById(this.config.elementId).innerText = newValue;
+        element.classList.add("cust-value");
+        element.removeChild(textNode);
+        element.innerText = newValue;
         return newValue;
     },
     changeAction: function () {
@@ -34,8 +39,14 @@ var ProfilChangeHandler = {
             var newValue = this.hideInput(this.config.elementId, this.config.id);
             var obj = {}
             obj[this.config.field] = newValue;
-            UserApi.saveData(JSON.stringify(obj));
+            UserApi.saveData(JSON.stringify(obj), this.config.api);
         }
+    },
+    changeActionSelect: function() {
+        val = document.getElementById(this.config.elementId).value;
+        var obj = {}
+        obj[this.config.field] = val;
+        UserApi.saveData(JSON.stringify(obj), this.config.api);
     },
     configure: function(newConfig) {
         if (typeof newConfig === "object") {

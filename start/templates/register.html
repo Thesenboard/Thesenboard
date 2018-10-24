@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+    {% block content %}
+
+    <div class="content anmeldung">
+        <form method="post" action="{% url 'register' %}" autocomplete="off">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal">Registrierung:</h1>
+        <div class="form-group">
+            <label for="id_username" class="sr-only">Benutzername</label>
+            <input type="text" name="username" id="id_username" maxlength="254" class="form-control" placeholder="Benutzername" value="{{ form.username.value|default_if_none:"" }}" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="id_vorname" class="sr-only">Vorname</label>
+            <input type="text" name="first_name" id="id_vorname" maxlength="254" class="form-control" placeholder="Vorname" value="{{ form.first_name.value|default_if_none:"" }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_nachname" class="sr-only">Nachname</label>
+            <input type="text" name="last_name" id="id_nachname" maxlength="254" class="form-control" placeholder="Nachname" value="{{ form.last_name.value|default_if_none:"" }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_email" class="sr-only">E-Mail</label>
+            <input type="email" name="email" id="id_email" maxlength="254" class="form-control" placeholder="E-Mail Adresse" value="{{ form.email.value|default_if_none:"" }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_password" class="sr-only">Passwort</label>
+            <input type="password" name="password" id="id_password" maxlength="128" class="form-control" placeholder="Passwort" value="{{ form.password.value|default_if_none:"" }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_password2" class="sr-only">Passwort Wiederholung</label>
+            <input type="password" name="password2" id="id_password2" maxlength="128" class="form-control" placeholder="Passwort Wiederholung" value="{{ form.password2.value|default_if_none:"" }}" required>
+        </div>
+        <div class="text-right">
+          <input type="submit" class="btn btn-primary" value="Jetzt registrieren" />
+        </div>
+        </form>
+
+    {% if form.errors %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {% if "username" in form.errors %}
+                <p>Der Benutzername ist bereits vergeben! Bitte wählen Sie einen anderen!</p>
+            {% endif %}
+            {% if "password" in form.errors %}
+                <p>Die Passwörter müssen übereinstimmen! Bitte versuchen Sie es erneut!</p>
+            {% endif %}
+            {% if "email" in form.errors %}
+                <p>Diese Email Adresse wurde bereits registriert!</p>
+            {% endif %}
+         </div>
+    {% endif %}
+
+    </div>
+
+
+    {% endblock content %}

@@ -1,5 +1,5 @@
 var UserApi = {
-    saveData: function(jsonData) {
+    saveData: function(jsonData, api) {
         var csrftoken = UserApi.getCookie('csrftoken');
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
@@ -11,11 +11,11 @@ var UserApi = {
             processData : false
         });
         $.ajax({
-           url: '/user/',
+           url: '/'+api+'/',
            type: 'PUT',
            data: jsonData,
            success: function(response) {
-             // do nothing yet...
+             // does nothing yet...
            }
         });
     },

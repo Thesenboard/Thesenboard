@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
     {% block content %}
 
@@ -10,24 +11,40 @@
     <table class="table">
       <tbody>
         <tr>
-          <th scope="row">Benutzername</th>
-          <td id="user">{{ user.username }}</td>
-          <td><button class="btn btn-outline-primary" id="benutzer">Bearbeiten</button></td>
+          <th scope="row" class="cust-value">Benutzername:</th>
+          <td id="user" class="col-8 cust-value">{{ user.username }}</td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="benutzer">Bearbeiten</button></td>
         </tr>
         <tr>
-          <th scope="row">Email</th>
-          <td id="mail">{{ user.email }}</td>
-          <td><button class="btn btn-outline-primary" id="email">Bearbeiten</button></td>
+          <th scope="row" class="cust-value">Email:</th>
+          <td id="mail" class="col-8 cust-value">{{ user.email }}</td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="email">Bearbeiten</button></td>
         </tr>
         <tr>
-          <th scope="row">Vorname</th>
-          <td id="vname">{{ user.first_name }}</td>
-          <td><button class="btn btn-outline-primary" id="vorname">Bearbeiten</button></td>
+          <th scope="row" class="cust-value">Vorname:</th>
+          <td id="vname" class="col-8 cust-value">{{ user.first_name }}</td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="vorname">Bearbeiten</button></td>
         </tr>
         <tr>
-          <th scope="row">Nachname</th>
-          <td id="nname">{{ user.last_name }}</td>
-          <td><button class="btn btn-outline-primary" id="nachname">Bearbeiten</button></td>
+          <th scope="row" class="cust-value">Nachname:</th>
+          <td id="nname" class="col-8 cust-value">{{ user.last_name }}</td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="nachname">Bearbeiten</button></td>
+        </tr>
+        <tr>
+          <th scope="row" class="cust-value">Tags:</th>
+          <td id="utags" class="col-8 cust-value">{{ user.user_tags }}</td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="tags">Bearbeiten</button></td>
+        </tr>
+        <tr>
+          <th scope="row" class="cust-value">Anzeigeart:</th>
+          <td class="col-8">
+              <select class="form-control" id="aart">
+                  <option value="benutzername" {% if user.user_visibility == 'benutzername'%} selected  {% endif %}>Benutzername</option>
+                  <option value="name" {% if user.user_visibility == 'name'%} selected  {% endif %}>Vor- und Nachname</option>
+                  <option value="anonym" {% if user.user_visibility == 'anonym'%} selected  {% endif %}>Anonym</option>
+              </select>
+          </td>
+          <td class="text-right col-2"><button class="btn btn-outline-primary" id="anzeigeart">Speichern</button></td>
         </tr>
       </tbody>
     </table>
@@ -37,5 +54,9 @@
     {% endif %}
 
     </div>
+
+    <script type="text/javascript" src="{% static 'modules/userApi.js' %}"></script>
+    <script type="text/javascript" src="{% static 'modules/profilChangeHandler.js' %}"></script>
+    <script type="text/javascript" src="{% static 'profile.js' %}"></script>
 
     {% endblock content %}
