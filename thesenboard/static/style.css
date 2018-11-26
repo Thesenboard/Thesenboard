@@ -3,9 +3,13 @@ body {
   height: 100%;
   font-family: 'Roboto', sans-serif;
 }
-
 .h3 {
   font-size: 24px!important;
+}
+a.undecorated:link,
+a.undecorated:visited,
+a.undecorated:hover {
+     text-decoration: none;
 }
 /* Header Section */
 h5 > a:link,
@@ -37,6 +41,25 @@ h5 > a:visited {
 }
 #register {
     font-size: 12px;
+}
+.logout {
+    font-size: 1.4em;
+}
+.logout-box {
+    font-size: 1.4em;
+    padding: 5px 0 0 0;
+}
+i.fa-user {
+  display: inline-block;
+  border-radius: 50px;
+  padding: 0.5em 0.6em;
+  color: #fff;
+  font-size: 0.9em;
+  background-color: #294C5D;
+  margin-right: 3px;
+}
+.top-nav {
+    height: 80px;
 }
 /* Login Section */
 .anmeldung,
@@ -81,4 +104,59 @@ ul.errorlist {
 /* Profil */
 .cust-value {
     padding: 20px 0px 0px 25px!important;
+}
+/* home */
+.jumbotron {
+    padding: 15px!important;
+}
+.titel {
+    padding: 5px;
+    margin: 5px 0 0 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background-color: #BCC8CE;
+}
+.fazit {
+    padding: 5px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: #BCC8CE;
+}
+#thesen {
+    padding: 0;
+    margin: 0;
+}
+.neue-these-box {
+    margin: 0 auto;
+}
+/* card elements */
+.home-card {
+    max-width: 750px;
+    margin: 0 0 10px 0;
+}
+.home-card-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-left: 12px;
+}
+.home-card-info {
+    margin-left: 12px;
+    font-size: 0.8em;
+}
+.card {
+    padding-top: 0!important;
+    margin-top: 0!important;
+    box-shadow: 2px 5px 9px #888888;
+}
+.card-circle {
+  margin: 0 12px 12px 12px;
+  padding-left: 13px;
+  height: 50px;
+  width: 50px;
+  background-color: #607D8B;
+  border-radius: 50%;
+  display: inline-block;
+  color: #fff;
+  font-size: 36px;
+  font-family: 'Lobster', cursive;
 }

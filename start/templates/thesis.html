@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+    {% block content %}
+
+     <div class="container main">
+         <div class="row">
+            <div id="these" class="col-8">
+
+                <div class="card home-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-1"><div class="card-circle">T</div></div>
+                            <div class="col-10"><div class="home-card-title row">{{ thesis.thesenTitel }}</div>
+                            <div class="home-card-info row">veröffentlicht am {{ thesis.thesenTime }} - Status: {{ status }} - Autor: {{ thesis.thesenUserId }}</div>
+                         </div>
+                    </div>
+                        <p class="card-text">Argumentation: {{ thesis.thesenArgument }}</p>
+                        <p class="card-text">Fazit: {{ thesis.thesenFazit }}</p>
+                        <p class="card-text">Quellen: {{ thesis.thesenQuelle }}</p>
+                    </div>
+                </div>
+
+
+     {% if user.is_authenticated and status == 'offen' %}
+                    <div class="card home-card">
+                        <div class="card-body">
+                            <div class="row">
+                            <div class="col-12">
+                                <form method="post" action="{% url 'thesis' thesis_id=thesis.thesenId %}" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="id_thesisEntriesTitel" class="sr-only">These</label>
+                                        <input type="text" name="thesisEntriesTitel" id="id_thesisEntriesTitel" maxlength="254" class="form-control" placeholder="Gegenthese" value="{{ form.thesisEntriesTitel.value }}" required autofocus>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_thesisEntriesArgument" class="sr-only">Argumentation</label>
+                                        <textarea name="thesisEntriesArgument" id="id_thesisEntriesArgument" class="form-control" rows="5" placeholder="Argumentieren Sie hier Ihre These mit mindestens 3 Sätzen aus...">{{ form.thesisEntriesArgument.value }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_thesisEntriesFazit" class="sr-only">Fazit</label>
+                                        <textarea name="thesisEntriesFazit" id="id_thesisEntriesFazit" class="form-control" rows="3" placeholder="Fassen Sie Ihre Argumentation hier kurz zusammen...">{{ form.thesisEntriesFazit.value }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_thesisEntriesQuelle" class="sr-only">Quellenangaben</label>
+                                        <textarea name="thesisEntriesQuelle" id="id_thesisEntriesQuelle" class="form-control" rows="3" placeholder="Geben Sie hier Ihre Quellen an...">{{ form.thesisEntriesQuelle.value }}</textarea>
+                                    </div>
+                                    <div class="text-right">
+                                        <input type="submit" class="btn btn-primary" value="Antwort publizieren" />
+                                    </div>
+                                </form>
+                                {% if form.errors %}
+                                    <div class="alert alert-danger mt-3" role="alert">
+                                        {% if "thesisEntriesArgument" in form.errors %}
+                                            <p>Ihre Argumentation ist etwas kurz geraten! Bitte erläutern Sie Ihren Standpunkt!</p>
+                                        {% endif %}
+                                        {% if "thesisEntriesFazit" in form.errors %}
+                                            <p>Ihr Fazit ist ein wenig kurz geraten! Bitte erläutern Sie in mindestens einem Satz ihre Argumentation!</p>
+                                        {% endif %}
+                                     </div>
+                                {% endif %}
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div id="thesen"></div>
+     {% endif %}
+            </div>
+         </div>
+
+
+     </div>
+
+     <script>
+        var id = {{ thesis.thesenId }};
+        var thesenCount = {{ thesisEntries.count }};
+     </script>
+     <script type="text/javascript" src="{% static  'modules/content_cards.js' %}"></script>
+     <script type="text/javascript" src="{% static 'modules/infinitescroll.js' %}"></script>
+     <script type="text/javascript" src="{% static 'thesis.js' %}"></script>
+    {% endblock content %}

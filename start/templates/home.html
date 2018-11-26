@@ -1,5 +1,25 @@
 {% extends "base.html" %}
+{% load static %}
 
     {% block content %}
+
+     <div class="container main">
+         <div class="row">
+         <div id="thesen" class="col-8"></div>
+         <div class="col-4 home-nav">
+             {% if user.is_authenticated %}
+                 <div class="neue-these-box">
+                    <a href="{% url 'newThesis'%}" class="undecorated"><button class="btn btn-primary btn-lg btn-block"> Neue These erstellen</button></a>
+                 </div>
+             {% endif %}
+         </div>
+         </div>
+     </div>
+     <script>
+        var thesenCount = {{ thesen.count }};
+     </script>
+     <script type="text/javascript" src="{% static  'modules/content_cards.js' %}"></script>
+     <script type="text/javascript" src="{% static 'modules/infinitescroll.js' %}"></script>
+     <script type="text/javascript" src="{% static 'home.js' %}"></script>
 
     {% endblock content %}
