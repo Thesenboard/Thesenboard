@@ -28,7 +28,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'thesenboard',
-    'start',
+    'start.apps.StartConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
