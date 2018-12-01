@@ -1,5 +1,28 @@
 $(function() {
     'use strict';
+
+    poll.getData('/abstimmung/'+id+'/');
+
+    $(document).on('click', '.abstimmung', function () {
+        var data = JSON.stringify({ 'thesisAbstimmungsEntscheidung': $(this)[0].value, 'thesisAbstimmungsId': id, 'thesisAbstimmungsUser': userId })
+        poll.setData('/abstimmung/'+id+'/', data);
+    });
+
+    var negativ = countAll-countPositives;
+
+    var chartData = {
+        labels: ["Pro", "Contra"],
+        datasets: [{
+            label: "Abstimmung",
+            backgroundColor: [
+                '#28a745',
+                '#dc3545'
+                ],
+            data: [countPositives, negativ]
+        }]
+    };
+    poll.drawChart(chartData)
+
     var counter = 1;
     var fields = {
         'id': 'thesisEntriesId',

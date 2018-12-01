@@ -10,7 +10,7 @@ from rest_framework import status, viewsets
 from django.contrib.auth import login
 from .forms import RegistrationForm
 from .forms import ThesisForm, ThesisEntryForm
-from .models import These, ThesisEntries
+from .models import These, ThesisEntries, ThesisAbstimmung
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -65,7 +65,15 @@ class ThesisView(TemplateView):
        thesis = These.objects.get(pk=thesis_id)
        status = self.getStatus(thesis)
        thesisEntries = ThesisEntries.objects.filter(thesisEntriesThese__thesenId=thesis_id)
-       return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status})
+       thesisAbstimmung = ThesisAbstimmung.objects.filter(thesisAbstimmungsId=thesis_id)
+       countPositives = 0
+       countAll = 0
+       for t in thesisAbstimmung:
+           countAll += 1
+           if t.thesisAbstimmungsEntscheidung:
+               countPositives += 1
+       return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status,
+                                              'countAll': countAll, 'countPositives': countPositives, 'userId': request.user.id})
 
     def post(self, request, thesis_id):
         thesis = These.objects.get(pk=thesis_id)
@@ -82,6 +90,7 @@ class ThesisView(TemplateView):
         else:
             thesisEntries = ThesisEntries.objects.all().filter(thesisEntriesThese__thesenId=thesis_id)
             return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status, 'form': form})
+
 
     def getStatus(self, thesis):
         endDate = datetime.date(thesis.thesenTime.year, thesis.thesenTime.month,
@@ -156,3 +165,31 @@ class ThesisEntryView(viewsets.ModelViewSet):
         data = ThesisEntriesSeralizer(entries, many=True).data
         return Response(data)
 
+
+class ThesenAbstimmungView(viewsets.ModelViewSet):
+    serializer_class = ThesenAbstimmungSeralizer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self, pk=None, userId=None):
+        try:
+            t = ThesisAbstimmung.objects.filter(thesisAbstimmungsId__thesenId=pk)
+            t = t.filter(thesisAbstimmungsUser=userId)
+            return t
+        except These.DoesNotExist:
+            raise Http404
+
+    def list(self, request, pk=None):
+        thesenAbstimmung = self.get_queryset(pk=pk, userId=request.user.id)
+        data = ThesenAbstimmungSeralizer(thesenAbstimmung, many=True).data
+        return Response(data)
+
+    def put(self, request, pk=None):
+        thesenAbstimmung = self.get_queryset(pk=pk, userId=request.user.id)
+        for abstimmung in thesenAbstimmung:
+            if abstimmung.thesisAbstimmungsUser == request.user:
+                return Response("none")
+        serializer = ThesenAbstimmungSeralizer(data=request.data, partial=True)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

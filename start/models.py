@@ -28,6 +28,12 @@ class ThesisEntries(models.Model):
     thesisEntriesThese = models.ManyToManyField(These, related_name='thesisEntriesThese')
 
 
+class ThesisAbstimmung(models.Model):
+    thesisAbstimmungsId = models.ForeignKey(These, null=True, on_delete=models.SET_NULL)
+    thesisAbstimmungsUser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    thesisAbstimmungsEntscheidung = models.BooleanField()
+
+
 class Zwischenruf(models.Model):
     zwischenrufId = models.AutoField(primary_key=True)
     beitragsId = models.ForeignKey(These, on_delete=models.PROTECT)

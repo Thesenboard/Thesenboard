@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import These, ThesisEntries, User
+from .models import These, ThesisEntries, User, ThesisAbstimmung
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,3 +33,10 @@ class ThesisEntriesSeralizer(serializers.ModelSerializer):
         model = ThesisEntries
         fields = ('thesisEntriesUserId', 'thesisEntriesId', 'thesisEntriesTitel', 'thesisEntriesArgument',
                   'thesisEntriesFazit', 'thesisEntriesTime', 'thesisEntriesQuelle', 'thesisEntriesThese')
+
+
+class ThesenAbstimmungSeralizer(serializers.ModelSerializer):
+    class Meta:
+        model = ThesisAbstimmung
+        fields = '__all__'
+

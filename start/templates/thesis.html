@@ -21,8 +21,8 @@
                     </div>
                 </div>
 
-
      {% if user.is_authenticated and status == 'offen' %}
+                    <div id="poll"></div>
                     <div class="card home-card">
                         <div class="card-body">
                             <div class="row">
@@ -63,9 +63,13 @@
                              </div>
                         </div>
                     </div>
-                    <div id="thesen"></div>
      {% endif %}
+                <div id="thesen"></div>
             </div>
+            <div id="theseMenu" class="col-4">
+                <canvas id="pollChart"></canvas>
+            </div>
+
          </div>
 
 
@@ -74,8 +78,13 @@
      <script>
         var id = {{ thesis.thesenId }};
         var thesenCount = {{ thesisEntries.count }};
+        var countPositives = {{ countPositives }};
+        var countAll = {{ countAll }};
+        var userId = {{ userId }};
      </script>
      <script type="text/javascript" src="{% static  'modules/content_cards.js' %}"></script>
      <script type="text/javascript" src="{% static 'modules/infinitescroll.js' %}"></script>
+     <script type="text/javascript" src="{% static 'modules/poll.js' %}"></script>
+     <script type="text/javascript" src="{% static 'Chart.bundle.min.js' %}"></script>
      <script type="text/javascript" src="{% static 'thesis.js' %}"></script>
     {% endblock content %}

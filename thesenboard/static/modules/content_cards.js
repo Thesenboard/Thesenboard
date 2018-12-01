@@ -10,3 +10,8 @@ var content_card_discussion = '<div class="card home-card"><div class="card-body
     + '<p class="card-text">%thesisEntriesFazit%</p>'
     + '<p class="card-text">%thesisEntriesQuelle%</p>'
     + '</div></div>';
+
+var content_card_poll = '<div class="card home-card"><div class="card-body">'
+    + '<div class="row"><div class="col-6"><button type="button" name="abstimmung" value="True" class="btn btn-block btn-success abstimmung">Stimme zu</button></div>'
+    + '<div class="col-6"><button type="button" name="abstimmung" value="False" class="btn btn-block btn-danger abstimmung">Stimme nicht zu</button></div></div>'
+    + '</div></div>';
