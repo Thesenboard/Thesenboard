@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, 'templates')
 ]
+print(TEMPLATE_DIRS)
 AUTH_USER_MODEL = 'start.User'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
@@ -28,7 +29,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'thesenboard',
-    'start',
+    'start.apps.StartConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
