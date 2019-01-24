@@ -11,7 +11,14 @@ var content_card_discussion = '<div class="card home-card"><div class="card-body
     + '<p class="card-text">%thesisEntriesQuelle%</p>'
     + '</div></div>';
 
-var content_card_poll = '<div class="card home-card"><div class="card-body">'
+var content_card_poll = '<div class="card home-card"><div class="card-body" id="poll_content">'
+    + '</div></div>';
+
+var content_card_poll_not_done =  '<div id="poll_buttons">'
     + '<div class="row"><div class="col-6"><button type="button" name="abstimmung" value="True" class="btn btn-block btn-success abstimmung">Stimme zu</button></div>'
     + '<div class="col-6"><button type="button" name="abstimmung" value="False" class="btn btn-block btn-danger abstimmung">Stimme nicht zu</button></div></div>'
-    + '</div></div>';
+    + '</div>';
+
+var content_card_poll_done = '<div id="poll_change">'
+    + '<div class="row"><div class="col-12"><button type="button" name="abstimmung_aendern" value="False" class="btn btn-block btn-danger abstimmung_aendern">Abstimmung ändern</button></div>'
+    + '</div>';

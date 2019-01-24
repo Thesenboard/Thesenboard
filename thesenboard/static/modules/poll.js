@@ -11,13 +11,15 @@ var poll = {
             processData: false
         });
         $.get(path, function(data) {
-            if(poll.isEmpty(data)) $('#poll').append(content_card_poll)
+            $('#poll').append(content_card_poll);
+            if(poll.isEmpty(data)) $('#poll_content').append(content_card_poll_not_done)
+            else $('#poll_content').append(content_card_poll_done)
         }).fail(function () {
             console.log("Request failed...");
         });
 
     },
-    setData: function(path, data) {
+    setData: function(path, data, chartData) {
         var csrftoken = poll.getCookie('csrftoken');
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -28,15 +30,47 @@ var poll = {
             contentType: 'application/json',
             processData: false
         });
-        $.ajax({
-            url: path,
-            type: 'PUT',
-            data: data
-          }).done(function() {
-              $('#poll').fadeOut(300, function() {
-                  $(this).remove();
-              });
-          });
+        $.get(path, function(returnData) {
+            if(jQuery.isEmptyObject(returnData)) {
+                 $.ajax({
+                    url: path,
+                    type: 'PUT',
+                    data: data
+                  }).done(function() {
+                      obj = JSON.parse(data);
+                      if(obj.thesisAbstimmungsEntscheidung === 'True') chartData.datasets[0].data[0] = chartData.datasets[0].data[0] + 1;
+                      else chartData.datasets[0].data[1] = chartData.datasets[0].data[1] + 1;
+                      poll.drawChart(chartData)
+                      $('#poll_buttons').fadeOut(300, function() {
+                          $(this).remove();
+                          $("#poll_content").append(content_card_poll_done);
+                      });
+                  });
+            } else {
+                  $.ajax({
+                    url: path,
+                    type: 'PATCH',
+                    data: data
+                  }).done(function() {
+                      obj = JSON.parse(data);
+                      if(obj.thesisAbstimmungsEntscheidung.toString().toLowerCase() !== returnData[0].thesisAbstimmungsEntscheidung.toString().toLowerCase()) {
+                          if (obj.thesisAbstimmungsEntscheidung === 'True') {
+                              chartData.datasets[0].data[0] = chartData.datasets[0].data[0] + 1;
+                              chartData.datasets[0].data[1] = chartData.datasets[0].data[1] - 1;
+                          }
+                          else {
+                              chartData.datasets[0].data[1] = chartData.datasets[0].data[1] + 1;
+                              chartData.datasets[0].data[0] = chartData.datasets[0].data[0] - 1;
+                          }
+                          poll.drawChart(chartData)
+                      }
+                      $('#poll_buttons').fadeOut(300, function() {
+                          $(this).remove();
+                          $("#poll_content").append(content_card_poll_done);
+                      });
+                  });
+            }
+        });
     },
     getCookie: function(name) {
         var cookieValue = null;

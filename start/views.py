@@ -66,6 +66,15 @@ class ThesisView(TemplateView):
        status = self.getStatus(thesis)
        thesisEntries = ThesisEntries.objects.filter(thesisEntriesThese__thesenId=thesis_id)
        thesisAbstimmung = ThesisAbstimmung.objects.filter(thesisAbstimmungsId=thesis_id)
+       thesisUser = User.objects.get(username=thesis.thesenUserId)
+
+       if(thesisUser.user_visibility == "name"):
+            userName = thesisUser.first_name + ' ' + thesisUser.last_name
+       elif (thesisUser.user_visibility == "benutzername"):
+           userName = thesisUser.username
+       else:
+           userName = "Anonym"
+
        countPositives = 0
        countAll = 0
        for t in thesisAbstimmung:
@@ -73,12 +82,27 @@ class ThesisView(TemplateView):
            if t.thesisAbstimmungsEntscheidung:
                countPositives += 1
        return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status,
-                                              'countAll': countAll, 'countPositives': countPositives, 'userId': request.user.id})
+                                              'countAll': countAll, 'countPositives': countPositives, 'userId': request.user.id, 'userName': userName})
 
     def post(self, request, thesis_id):
         thesis = These.objects.get(pk=thesis_id)
         status = self.getStatus(thesis)
         form = ThesisEntryForm(request.POST)
+        thesisAbstimmung = ThesisAbstimmung.objects.filter(thesisAbstimmungsId=thesis_id)
+        thesisUser = User.objects.get(username=thesis.thesenUserId)
+
+        if (thesisUser.user_visibility == "name"):
+            userName = thesisUser.first_name + ' ' + thesisUser.last_name
+        elif (thesisUser.user_visibility == "benutzername"):
+            userName = thesisUser.username
+        else:
+            userName = "Anonym"
+        countPositives = 0
+        countAll = 0
+        for t in thesisAbstimmung:
+            countAll += 1
+            if t.thesisAbstimmungsEntscheidung:
+                countPositives += 1
         if form.is_valid():
             entry = form.save(commit=False)
             entry.thesisEntriesUserId = request.user
@@ -86,10 +110,12 @@ class ThesisView(TemplateView):
             entry.thesisEntriesThese.add(thesis.thesenId)
             entry.save()
             thesisEntries = ThesisEntries.objects.all().filter(thesisEntriesThese__thesenId=thesis_id)
-            return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status})
+            return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status,
+                                              'countAll': countAll, 'countPositives': countPositives, 'userId': request.user.id, 'userName': userName})
         else:
             thesisEntries = ThesisEntries.objects.all().filter(thesisEntriesThese__thesenId=thesis_id)
-            return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status, 'form': form})
+            return render(request, 'thesis.html', {'thesis': thesis, 'thesisEntries': thesisEntries, 'status': status, 'form': form,
+                                              'countAll': countAll, 'countPositives': countPositives, 'userId': request.user.id, 'userName': userName})
 
 
     def getStatus(self, thesis):
@@ -119,13 +145,13 @@ class UserDetail(generics.RetrieveAPIView, UpdateModelMixin):
     def get(self, request):
         current_user = request.user
         user = self.get_queryset(id=current_user.id)
-        data = UserSerializer(user).data
+        data = self.serializer_class(user).data
         return Response(data)
 
     def put(self, request):
         current_user = request.user
         user = self.get_queryset(current_user.id)
-        serializer = UserSerializer(user, data=request.data, partial=True)
+        serializer = self.serializer_class(user, data=request.data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(serializer.data)
@@ -143,7 +169,7 @@ class AllThesenView(viewsets.ModelViewSet):
 
     def get(self, request):
         thesen = self.get_queryset()
-        data = ThesenSeralizer(thesen).data
+        data = self.serializer_class(thesen).data
         return Response(data)
 
 
@@ -162,7 +188,7 @@ class ThesisEntryView(viewsets.ModelViewSet):
         paginator = Paginator(queryset, 5)
         page = request.GET.get('page')
         entries = paginator.page(page)
-        data = ThesisEntriesSeralizer(entries, many=True).data
+        data = self.serializer_class(entries, many=True).data
         return Response(data)
 
 
@@ -180,7 +206,7 @@ class ThesenAbstimmungView(viewsets.ModelViewSet):
 
     def list(self, request, pk=None):
         thesenAbstimmung = self.get_queryset(pk=pk, userId=request.user.id)
-        data = ThesenAbstimmungSeralizer(thesenAbstimmung, many=True).data
+        data = self.serializer_class(thesenAbstimmung, many=True).data
         return Response(data)
 
     def put(self, request, pk=None):
@@ -188,8 +214,18 @@ class ThesenAbstimmungView(viewsets.ModelViewSet):
         for abstimmung in thesenAbstimmung:
             if abstimmung.thesisAbstimmungsUser == request.user:
                 return Response("none")
-        serializer = ThesenAbstimmungSeralizer(data=request.data, partial=True)
+        serializer = self.serializer_class(data=request.data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, pk=None):
+        instance = self.get_queryset(pk=pk, userId=request.user.id)
+        serializer = self.serializer_class(instance.first(), data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+

@@ -5,14 +5,17 @@
 
      <div class="container main">
          <div class="row">
+         {% if user.is_authenticated %}
             <div id="these" class="col-8">
-
+         {% else %}
+             <div id="these" class="col-12">
+         {% endif %}
                 <div class="card home-card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-1"><div class="card-circle">T</div></div>
                             <div class="col-10"><div class="home-card-title row">{{ thesis.thesenTitel }}</div>
-                            <div class="home-card-info row">veröffentlicht am {{ thesis.thesenTime }} - Status: {{ status }} - Autor: {{ thesis.thesenUserId }}</div>
+                            <div class="home-card-info row">veröffentlicht am {{ thesis.thesenTime }} - Status: {{ status }} - Autor: {{ userName }}</div>
                          </div>
                     </div>
                         <p class="card-text">Argumentation: {{ thesis.thesenArgument }}</p>
@@ -31,7 +34,7 @@
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label for="id_thesisEntriesTitel" class="sr-only">These</label>
-                                        <input type="text" name="thesisEntriesTitel" id="id_thesisEntriesTitel" maxlength="254" class="form-control" placeholder="Gegenthese" value="{{ form.thesisEntriesTitel.value }}" required autofocus>
+                                        <input type="text" name="thesisEntriesTitel" id="id_thesisEntriesTitel" maxlength="254" class="form-control" placeholder="Gegenthese" value="{{ form.thesisEntriesTitel.value }}" autofocus>
                                     </div>
                                     <div class="form-group">
                                         <label for="id_thesisEntriesArgument" class="sr-only">Argumentation</label>
@@ -51,6 +54,9 @@
                                 </form>
                                 {% if form.errors %}
                                     <div class="alert alert-danger mt-3" role="alert">
+                                         {% if "thesisEntriesTitel" in form.errors %}
+                                            <p>Bitte geben Sie einen Titel für Ihre These an!</p>
+                                        {% endif %}
                                         {% if "thesisEntriesArgument" in form.errors %}
                                             <p>Ihre Argumentation ist etwas kurz geraten! Bitte erläutern Sie Ihren Standpunkt!</p>
                                         {% endif %}
@@ -66,10 +72,11 @@
      {% endif %}
                 <div id="thesen"></div>
             </div>
+            {% if user.is_authenticated %}
             <div id="theseMenu" class="col-4">
                 <canvas id="pollChart"></canvas>
             </div>
-
+            {% endif %}
          </div>
 
 
@@ -80,11 +87,22 @@
         var thesenCount = {{ thesisEntries.count }};
         var countPositives = {{ countPositives }};
         var countAll = {{ countAll }};
+     </script>
+     {% if user.is_authenticated %}
+      <script>
         var userId = {{ userId }};
      </script>
+     {% else %}
+      <script>
+        var userId = 'none';
+     </script>
+     {% endif %}
+
      <script type="text/javascript" src="{% static  'modules/content_cards.js' %}"></script>
      <script type="text/javascript" src="{% static 'modules/infinitescroll.js' %}"></script>
-     <script type="text/javascript" src="{% static 'modules/poll.js' %}"></script>
+     {% if user.is_authenticated %}
+        <script type="text/javascript" src="{% static 'modules/poll.js' %}"></script>
+     {% endif %}
      <script type="text/javascript" src="{% static 'Chart.bundle.min.js' %}"></script>
      <script type="text/javascript" src="{% static 'thesis.js' %}"></script>
     {% endblock content %}
