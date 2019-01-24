@@ -14,5 +14,5 @@ urlpatterns = [
     path('user/', views.UserDetail.as_view()),
     path('discussion/<int:pk>/', views.ThesisEntryView.as_view({'get': 'list'})),
     path('discussions/', views.AllThesenView.as_view({'get': 'list'})),
-    path('abstimmung/<int:pk>/', views.ThesenAbstimmungView.as_view({'get': 'list'})),
+    path('abstimmung/<int:pk>/', views.ThesenAbstimmungView.as_view({'get': 'list', 'put': 'put', 'patch': 'partial_update'})),
 ]

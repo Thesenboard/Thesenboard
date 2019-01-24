@@ -9,12 +9,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'first_name', 'last_name', 'email', 'user_visibility', 'user_tags')
 
 
-class ThesenSeralizer(serializers.ModelSerializer):
-    class Meta:
-        model = These
-        fields = ('thesenId', 'thesenUserId', 'thesenTitel', 'thesenArgument', 'thesenFazit', 'thesenTime')
-
-
 class UserEntriesSerializer(serializers.RelatedField):
     def to_representation(self, value):
         if(value.user_visibility == 'name'):
@@ -24,6 +18,14 @@ class UserEntriesSerializer(serializers.RelatedField):
         else:
             username = value.username
         return username
+
+
+class ThesenSeralizer(serializers.ModelSerializer):
+    thesenUserId = UserEntriesSerializer(read_only=True)
+
+    class Meta:
+        model = These
+        fields = ('thesenId', 'thesenUserId', 'thesenTitel', 'thesenArgument', 'thesenFazit', 'thesenTime')
 
 
 class ThesisEntriesSeralizer(serializers.ModelSerializer):

@@ -1,28 +1,38 @@
 $(function() {
     'use strict';
 
-    poll.getData('/abstimmung/'+id+'/');
+    if(userId !== 'none') {
+        poll.getData('/abstimmung/' + id + '/');
 
-    $(document).on('click', '.abstimmung', function () {
-        var data = JSON.stringify({ 'thesisAbstimmungsEntscheidung': $(this)[0].value, 'thesisAbstimmungsId': id, 'thesisAbstimmungsUser': userId })
-        poll.setData('/abstimmung/'+id+'/', data);
-    });
+        var negativ = countAll - countPositives;
 
-    var negativ = countAll-countPositives;
-
-    var chartData = {
-        labels: ["Pro", "Contra"],
-        datasets: [{
-            label: "Abstimmung",
-            backgroundColor: [
-                '#28a745',
-                '#dc3545'
+        var chartData = {
+            labels: ["Pro", "Contra"],
+            datasets: [{
+                label: "Abstimmung",
+                backgroundColor: [
+                    '#28a745',
+                    '#dc3545'
                 ],
-            data: [countPositives, negativ]
-        }]
-    };
-    poll.drawChart(chartData)
+                data: [countPositives, negativ]
+            }]
+        };
+        poll.drawChart(chartData);
 
+        $(document).on('click', '.abstimmung', function () {
+            var data = JSON.stringify({
+                'thesisAbstimmungsEntscheidung': $(this)[0].value,
+                'thesisAbstimmungsId': id,
+                'thesisAbstimmungsUser': userId
+            })
+            poll.setData('/abstimmung/' + id + '/', data, chartData);
+        });
+
+        $(document).on('click', '.abstimmung_aendern', function () {
+            $('#poll_change').remove();
+            $("#poll_content").append(content_card_poll_not_done);
+        });
+    }
     var counter = 1;
     var fields = {
         'id': 'thesisEntriesId',
@@ -42,4 +52,5 @@ $(function() {
                 InfiniteScroll.getData('/discussion/'+id+'/?page=' + counter, content_card_discussion, fields);
         }
     };
+
 });

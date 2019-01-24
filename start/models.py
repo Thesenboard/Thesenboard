@@ -6,6 +6,10 @@ class User(AbstractUser):
     user_visibility = models.CharField(max_length=40)
     user_tags = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = "Benutzer"
+        verbose_name_plural = "Benutzer"
+
 
 class These(models.Model):
     thesenId = models.AutoField(primary_key=True)

@@ -28,6 +28,9 @@ var InfiniteScroll = {
                   var replacements = InfiniteScroll.prepareReplacement(cardData);
                   replacements['%status%'] = status;
                   replacements['%datum%'] = discussionDate;
+                  if(cardData['thesisEntriesQuelle'] == '') {
+                      replacements['%thesisEntriesQuelle%'] = ' ';
+                  }
                   cards += InfiniteScroll.replaceAll(content_card, replacements);
               }
               $('#thesen').append(cards);
